@@ -29,9 +29,11 @@ using namespace std;
 int main() {
 	//no command line args to resolve
 
-	//create the server socket class
+	//init the socket for server to listen on -- create a UDPSocket object and pass in the port 
+	//server will listen on port 6100 for new players
 	
-	//do..while listen for packets and resolve them
-	//if message type game init, then begin game with next init that is sent
+	//infinite loop for either quit command or 
+	//see if sources > 2, if so, then take the first two of the vector 
+	//and call a thread to start a Game_Manager session for them
 	
 }
