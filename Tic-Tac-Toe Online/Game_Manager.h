@@ -11,6 +11,7 @@
 #include <cstring>
 
 
+
 #ifdef _WIN32
     /* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
 #ifndef _WIN32_WINNT
@@ -31,24 +32,12 @@ typedef int SOCKET;
 #endif
 
 struct udpMessage {
-    unsigned short nVersion;
+    unsigned short nVersion = 1;
     unsigned short messageType;
     unsigned short messageLength;
-    unsigned long command_seq;
-    char message[100];
+    unsigned int command_pos;
+    std::string message;
 };
-
-
-/////////////////
-
-
-
-//bool UDPSocket::check_winner() {
-//	//check if any winners in game_grid
-//}
-/////////////////////////
-
-
 
 class Game_Manager {
 public:
@@ -60,7 +49,7 @@ public:
 
     void sendMessage(const sockaddr_in client, unsigned short port_num, const udpMessage& msg);
 
-    bool check_winner();
+    int check_winner();
 
     //member functions that will help init and close sockets
     int sockInit(void);
@@ -72,11 +61,10 @@ public:
     void error(const char* msg);
 
     //public member variables
-
-private:
-    std::thread m_recvThread;
+    int sockfd;
+    char game_grid[9] = { '1' };
     sockaddr_in player_1;
     sockaddr_in player_2;
-    char game_grid[9] = {'0'};
-
+private:
+    std::thread m_recvThread;
 };
