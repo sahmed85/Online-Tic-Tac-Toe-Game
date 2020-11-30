@@ -5,7 +5,7 @@
 #include <string>
 #include <mutex>
 #include <cstring>
-
+#include <array>
 using namespace std;
 
 #ifdef _WIN32
@@ -101,7 +101,7 @@ void recv_SocketMsgs(Game_Manager* pUdpSocket) {
 					//check if there is an winner and send game won/lost packets
 					//call bool to check if grid is won by any players
 					int player_won = pUdpSocket->check_winner();
-					if (player_won) {
+					if (player_won == 3 || player_won == 1 || player_won == 2) {
 						//if player_won = 3; tie
 						if (player_won == 3) {
 							udpMessage tied;
@@ -121,6 +121,7 @@ void recv_SocketMsgs(Game_Manager* pUdpSocket) {
 							if (n < 0) {
 								pUdpSocket->error("ERROR sending tied packet to Player2");
 							}
+							pUdpSocket->game_done = true;
 						}
 						else {
 							//if 1, then player1 one or if 2 player2 
@@ -148,6 +149,7 @@ void recv_SocketMsgs(Game_Manager* pUdpSocket) {
 								if (n < 0) {
 									pUdpSocket->error("ERROR sending game won packet to Player2");
 								}
+								pUdpSocket->game_done = true;
 							}
 							else if (player_won == 2) {
 								//send game won packet to player two and send game lost packet to player one
@@ -162,6 +164,7 @@ void recv_SocketMsgs(Game_Manager* pUdpSocket) {
 								if (n < 0) {
 									pUdpSocket->error("ERROR sending game won packet to Player1");
 								}
+								pUdpSocket->game_done = true;
 							}
 						}
 					}
@@ -204,8 +207,7 @@ Game_Manager::Game_Manager(sockaddr_in player1, sockaddr_in player2)
 	//start a thread on function receiveSocketMsgs, that will listen for packets and resolve them appropiately
 	//this thread has a pointer to this object to access members
 	m_recvThread = thread(recv_SocketMsgs, this);
-	//send game init packet to player 1 and two
-	//!!!!!!!!!!!!!!!!!!!!! Complete Here !!!!!!!!!!!!!!!!!!!!!!!!!
+	//send game init packet to player 1 and 2
 	int n;
 	//construct the message; lets do player1 first
 	udpMessage game_init;
@@ -243,25 +245,25 @@ Game_Manager::~Game_Manager() {
 	m_recvThread.join();
 
 	//terminate the program with status 0 -- graceful exit 
-	exit(0);
+	//exit(0);
 
 }
 
-void Game_Manager::sendMessage(const sockaddr_in client, unsigned short port_num, const udpMessage& msg) {
-	//send udpMessage to client on game move, winner or game beginning, etc. 
-
-}
 
 int Game_Manager::check_winner() {
-	//check grid if we have a winner or tie
-	
+	////check grid if we have a winner or tie
+
 	//check horizontals
 	for (int i = 0; i <= 2; ++i) {
-		if ((game_grid[(i * 3)] == game_grid[(i * 3) + 1]) && (game_grid[(i * 3)] == game_grid[(i * 3) + 2])) {
+		if ((game_grid[(i * 3)] == 'X' || game_grid[(i * 3)] == 'O') && (game_grid[(i * 3)] == game_grid[(i * 3) + 1]) && (game_grid[(i * 3)] == game_grid[(i * 3) + 2])) {
 			if (game_grid[(i * 3)] == 'X') {
+				//game_done = true;
+				cout << "Horizontal found." << endl;
 				return 1;
 			}
 			else {
+				//game_done = true;
+				cout << "Horizontal found." << endl;
 				return 2;
 			}
 		}
@@ -269,33 +271,40 @@ int Game_Manager::check_winner() {
 
 	//check vertical
 	for (int j = 0; j <= 2; ++j) {
-		if ((game_grid[j] == game_grid[j + 3]) && (game_grid[j] == game_grid[j + 6])) {
+		if ((game_grid[(j)] == 'X' || game_grid[(j)] == 'O') && (game_grid[j] == game_grid[j + 3]) && (game_grid[j] == game_grid[j + 6])) {
 			if (game_grid[j] == 'X') {
+				//game_done = true;
 				return 1;
 			}
 			else {
+				//game_done = true;
 				return 2;
 			}
 		}
 	}
 
 	//check diagnol
-	if ((game_grid[2] == game_grid[4]) && (game_grid[2] == game_grid[6])) {
+	if ((game_grid[(2)] == 'X' || game_grid[(2)] == 'O') && (game_grid[2] == game_grid[4]) && (game_grid[2] == game_grid[6])) {
 		if (game_grid[2] == 'X') {
+			//game_done = true;
 			return 1;
 		}
 		else {
+			//game_done = true;
 			return 2;
 		}
 	}
-	else if ((game_grid[0] == game_grid[4]) && (game_grid[2] == game_grid[8])) {
+	else if ((game_grid[(0)] == 'X' || game_grid[(0)] == 'O') && (game_grid[0] == game_grid[4]) && (game_grid[0] == game_grid[8])) {
 		if (game_grid[0] == 'X') {
+			//game_done = true;
 			return 1;
 		}
 		else {
+			//game_done = true;
 			return 2;
 		}
 	}
+	//game_done = true;
 
 	//check if all grid spots filled
 	for (int k = 0; k < 9; ++k) {
@@ -303,9 +312,8 @@ int Game_Manager::check_winner() {
 			return 0;
 		}
 	}
-
+	//if none of the above, return tied
 	return 3;
-
 }
 
 

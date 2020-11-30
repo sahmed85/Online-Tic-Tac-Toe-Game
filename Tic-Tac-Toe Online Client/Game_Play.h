@@ -1,7 +1,5 @@
 #pragma once
 
-//this is the class that will handle the game between two players
-
 #include <iostream>
 #include <thread>
 #include <list>
@@ -9,10 +7,11 @@
 #include <mutex>
 #include <cstring>
 #include <array>
-
+//SFML Library
+#include <SFML/Graphics.hpp>
 
 #ifdef _WIN32
-    /* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
+/* See http://stackoverflow.com/questions/12765743/getaddrinfo-on-win32 */
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501  /* Windows XP. */
 #endif
@@ -21,7 +20,7 @@
 
 #pragma comment (lib, "Ws2_32.lib")
 #else
-    /* Assume that any non-Windows platform uses POSIX-style sockets instead. */
+/* Assume that any non-Windows platform uses POSIX-style sockets instead. */
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netdb.h>  /* Needed for getaddrinfo() and freeaddrinfo() */
@@ -38,17 +37,16 @@ struct udpMessage {
     std::string message;
 };
 
-class Game_Manager {
+
+class Game_Play {
 public:
-    Game_Manager() = delete;
+    Game_Play();
 
-    Game_Manager(sockaddr_in player1, sockaddr_in player2);
+    ~Game_Play();
 
-    ~Game_Manager();
+    void updateGrid(int pos, char mvType);
 
-    //void sendMessage(const sockaddr_in client, unsigned short port_num, const udpMessage& msg);
-
-    int check_winner();
+    void sendMove(int pos);
 
     //member functions that will help init and close sockets
     int sockInit(void);
@@ -61,10 +59,15 @@ public:
 
     //public member variables
     int sockfd;
-    std::array<char, 9 > game_grid = { '1', '1', '1', '1', '1', '1', '1', '1', '1' };
-    sockaddr_in player_1;
-    sockaddr_in player_2;
+    std::array<char, 9 > game_grid = {'1', '1', '1', '1', '1', '1', '1', '1', '1'};
+    sockaddr_in server;
+    bool canMove;
+    char player;
+    bool connected = false;
+    std::string displayText = "";
     bool game_done = false;
+
 private:
     std::thread m_recvThread;
+
 };

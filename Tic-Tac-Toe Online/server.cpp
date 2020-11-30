@@ -5,7 +5,7 @@
 #include <mutex>
 #include <cstring>
 #include "Game_Manager.h"
-
+#include <array>
 
 #pragma warning(disable : 4996)
 
@@ -116,6 +116,10 @@ int main() {
 void create_game(sockaddr_in p1, sockaddr_in p2) {
 	//create a game_manager object and let it handle game communications.
 	Game_Manager game(p1, p2);
+	cout << "In Game Thread" << endl;
+	while (true) {
+
+	}
 	game.~Game_Manager();
 	cout << "Game Complete, exiting thread." << endl;
 }
