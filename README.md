@@ -5,9 +5,12 @@ This project is an online Tic-Tac-Toe game with server and client executables. T
 
 # Future Fixes 
 I wanted to take some time to explain fixes that I would do if I had more time:
+
   •	Utilize TCP for matchmaking request and then UDP for all other message types.
-  •	More graceful exit for player window:
-    o	Currently an error is thrown once the client game is exited. I wish I could spend more time debugging this issue (however, server is still listening for matchmaking).
+  
+  •	More graceful exit for player window; currently an error is thrown once the client game is exited. I wish I could spend more time debugging this issue (however, server is still listening for matchmaking).
+    
   •	Enable a restart feature, to re-enter matchmaking or replay the person that you just played.
+  
   •	Optimize a few of the helper functions. 
 
