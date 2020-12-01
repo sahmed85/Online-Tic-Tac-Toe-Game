@@ -1,6 +1,12 @@
-#pragma once
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the header for the class that will handle the game between two players.
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
 
-//this is the class that will handle the game between two players
+#pragma once
 
 #include <iostream>
 #include <thread>

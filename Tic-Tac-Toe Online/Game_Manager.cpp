@@ -1,3 +1,11 @@
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the implementation of the Game_Manager class that will handle the game between two players.
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
+
 #include "Game_Manager.h"
 #include <iostream>
 #include <thread>
@@ -27,6 +35,7 @@ using namespace std;
 typedef int SOCKET;
 #endif
 
+//this function will in a seperate thread that will handle message recevied by the client 
 void recv_SocketMsgs(Game_Manager* pUdpSocket) {
 	int n;
 	//hold received message in this
@@ -234,6 +243,7 @@ Game_Manager::Game_Manager(sockaddr_in player1, sockaddr_in player2)
 	}
 }
 
+//destructor needs to handle closing the socket and join the recv thread 
 Game_Manager::~Game_Manager() {
 	//close the socket first, this will trigger the break in the recv thread and will allow it to gracefully join
 	//close the socket
@@ -249,7 +259,7 @@ Game_Manager::~Game_Manager() {
 
 }
 
-
+//this helper function that checks if there is an winner everytime a move is sent
 int Game_Manager::check_winner() {
 	////check grid if we have a winner or tie
 

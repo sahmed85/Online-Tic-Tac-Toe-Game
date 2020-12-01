@@ -1,3 +1,11 @@
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the main execution of the client side code. This code handles matchmaking and create a Game_Play class to manage game control and graphics for the player.
+//          Please note that there is a dependent library for this 
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <sstream>
@@ -35,6 +43,7 @@ using namespace std;
 
 void drawXO(int grid_pos, char shape_type, sf::RenderWindow& this_window);
 
+//this string is to display message on the window.
 string you_are = "";
 
 int main() {
@@ -221,6 +230,9 @@ int main() {
     return 0;
 }
 
+//this function draws the X or O based on what is in the grid
+//passed in as reference is the RenderWindow, and this function draws to its buffer
+//display is call in the main thread
 void drawXO(int grid_pos, char shape_type, sf::RenderWindow& this_window) {
     if (shape_type == 'X') {
         sf::RectangleShape x_1(sf::Vector2f(150.0, 5.0f));

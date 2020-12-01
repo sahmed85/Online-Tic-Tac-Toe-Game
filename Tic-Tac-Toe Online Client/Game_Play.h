@@ -1,3 +1,11 @@
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the header for the class that will manage game control and graphics for the player.
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
+
 #pragma once
 
 #include <iostream>

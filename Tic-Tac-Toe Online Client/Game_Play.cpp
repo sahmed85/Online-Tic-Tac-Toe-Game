@@ -1,3 +1,11 @@
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the implementation for the Game_Play class that will manage game control and graphics for the player.
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
+
 #include <iostream>
 #include <thread>
 #include <list>
@@ -29,6 +37,7 @@ using namespace std;
 typedef int SOCKET;
 #endif
 
+//this function will in a seperate thread that will handle message recevied by the server 
 void recv_SocketMsgs(Game_Play* game) {
 	int n;
 	//hold received message in this
@@ -106,6 +115,7 @@ void recv_SocketMsgs(Game_Play* game) {
 	} while (true);
 }
 
+
 Game_Play::Game_Play() {
 	//init the socket that GameManager will manipulate
 	//setup socket
@@ -164,6 +174,7 @@ Game_Play::Game_Play() {
 	cout << "Sent Matchmaking Packet to server" << endl;
 }
 
+//destructor needs to handle closing the socket and join the recv thread 
 Game_Play::~Game_Play() {
 	//close the socket first, this will trigger the break in the recv thread and will allow it to gracefully join
 	//close the socket
@@ -178,10 +189,12 @@ Game_Play::~Game_Play() {
 	exit(0);
 }
 
+//helper function that update member variable (grid)
 void Game_Play::updateGrid(int pos, char mv_type) {
 	game_grid[pos] = mv_type;
 }
 
+//helper function that will use the socket to send a message to the server
 void Game_Play::sendMove(int pos) {
 	//send move to server, messageType = 1, message is game->player.
 	cout << "Trying to send!" << endl;

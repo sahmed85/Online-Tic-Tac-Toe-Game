@@ -1,3 +1,11 @@
+//Author: Shadman Ahmed
+//Class: ECE 4122
+//Assingment: Lab5
+//Date: 11/17/2020
+//Last Modified:12/01/2020 
+//Overview: This file contains the main execution of the server side code. This code handles matchmaking and spawns threads to manage gameplay between players.
+//Github/Git: https://github.com/sahmed85/Online-Tic-Tac-Toe-Game
+
 #include <iostream>
 #include <thread>
 #include <list>
@@ -6,6 +14,7 @@
 #include <cstring>
 #include "Game_Manager.h"
 #include <array>
+#include <chrono> 
 
 #pragma warning(disable : 4996)
 
@@ -36,16 +45,9 @@ int sockQuit(void);
 int sockClose(SOCKET sock);
 void error(const char* msg);
 
-//struct udpMessage {
-//	unsigned short nVersion;
-//	unsigned short messageType;
-//	unsigned short messageLength;
-//	unsigned int command_pos;
-//	std::string message;
-//};
-
+//these list will hold the Network info of players that entered matchmaking
 list<sockaddr_in> match_queue;
-list<thread> games;
+
 
 int main() {
 	//server will listen on port 6100 for new players and handle matchmaking init packets
@@ -100,7 +102,11 @@ int main() {
 				cout << "Received Matchmaking Request" << endl;
 				if (match_queue.size() == 2) {
 					thread th(create_game, match_queue.front(), match_queue.back());
+					//detach the thread, since it has no dependency with main and can finish execution
+					//without affecting main
 					th.detach();
+					match_queue.pop_back();
+					match_queue.pop_back();
 				}
 			}
 		}
@@ -117,11 +123,13 @@ void create_game(sockaddr_in p1, sockaddr_in p2) {
 	//create a game_manager object and let it handle game communications.
 	Game_Manager game(p1, p2);
 	cout << "In Game Thread" << endl;
-	while (true) {
+	while (!game.game_done) {
 
 	}
-	game.~Game_Manager();
+	std::this_thread::sleep_for(std::chrono::seconds(5));
 	cout << "Game Complete, exiting thread." << endl;
+	//game.~Game_Manager();
+	
 }
 
 //socket init and quit function as well as error handling -- Cross Platform implementation
